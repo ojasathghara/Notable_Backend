@@ -4,6 +4,9 @@ const { body, validationResult } = require("express-validator");
 // importing authentication service
 const authService = require("../services/auth");
 
+// import the middleware
+const { fetchuser } = require("../middlewares/fetchuser");
+
 // instantiating the router
 const router = express.Router();
 
@@ -66,6 +69,25 @@ router.post("/login", loginValidator, async (req, res) => {
             default:
                 res.status(400).json({ error: "unknown error" });
         }
+    }
+});
+
+// get the logged in user, login required
+
+router.post("/getuser", fetchuser, async (req, res) => {
+    const userId = req.user.id; // appended using middleware fetuser
+    let serviceResponse = await authService.getUser(userId);
+
+    switch (serviceResponse.type) {
+        case "error":
+            return res.status(400).json(serviceResponse);
+        case "success":
+            return res.status(200).json(serviceResponse);
+        case "fault":
+            return res.status(400).json(serviceResponse);
+
+        default:
+            res.status(400).json({ error: "unknown error" });
     }
 });
 
