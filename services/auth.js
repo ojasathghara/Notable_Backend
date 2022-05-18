@@ -41,7 +41,7 @@ const createUser = async (newUserData) => {
         );
     } catch (error) {
         console.log(error.message);
-        return generateResponseData("fault", "database fault", {
+        return generateResponseData("fault", "Internal server error", {
             error: error.message,
         });
     }
@@ -87,7 +87,7 @@ const login = async (userData) => {
         return generateResponseData("success", "User authenticated", extra);
     } catch (error) {
         console.log(error.message);
-        return generateResponseData("fault", "database fault", {
+        return generateResponseData("fault", "Internal server error", {
             error: error.message,
         });
     }
@@ -104,7 +104,7 @@ const getUser = async (userId) => {
         });
     } catch (error) {
         console.log(error.message);
-        return generateResponseData("fault", "database fault", {
+        return generateResponseData("fault", "Internal server error", {
             error: error.message,
         });
     }

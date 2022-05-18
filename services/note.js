@@ -17,7 +17,7 @@ const fetchAll = async (userId) => {
         );
     } catch (error) {
         console.log(error.message);
-        return generateResponseData("fault", "database fault", {
+        return generateResponseData("fault", "Internal server error", {
             error: error.message,
         });
     }
@@ -46,7 +46,7 @@ const addNote = async (userId, newNoteData) => {
         });
     } catch (error) {
         console.log(error.message);
-        return generateResponseData("fault", "database fault", {
+        return generateResponseData("fault", "Internal server error", {
             error: error.message,
         });
     }
