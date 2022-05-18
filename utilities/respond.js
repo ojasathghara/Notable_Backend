@@ -9,4 +9,4 @@ const setResponse = (res, status, type, message, data = {}) => {
     return res;
 };
 
-module.exports = { generateResponseData, setResponse };
+module.exports = { setResponse };
