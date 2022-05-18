@@ -1,6 +1,7 @@
 // import models
 const Note = require("../models/Note");
 const User = require("../models/User");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 // import utils
 const { generateResponseData } = require("../utilities/responseData");
@@ -52,4 +53,41 @@ const addNote = async (userId, newNoteData) => {
     }
 };
 
-module.exports = { fetchAll, addNote };
+const updateNote = async (userId, noteId, updatedNoteData) => {
+    const user = await User.findById(userId).select("-password"); // select all fields instead of the password
+    if (!user) {
+        return generateResponseData(
+            "error",
+            "Cannot update the note, user does not exist"
+        );
+    }
+    const oldNote = await Note.findById(noteId);
+    console.log("old note: " + oldNote);
+    if (!oldNote) {
+        return generateResponseData(
+            "error",
+            "Cannot update the note, note does not exist"
+        );
+    }
+
+    if (oldNote.user.toString() !== userId) {
+        return generateResponseData(
+            "error",
+            "You cannot update the note. This note doesn't belong to you."
+        );
+    }
+
+    oldNote.title = updatedNoteData.title; // i will build the front end so that title and description is always sent.
+    oldNote.description = updatedNoteData.description;
+    if (updatedNoteData.tag) {
+        oldNote.tag = updatedNoteData.tag;
+    }
+
+    const note = await oldNote.save();
+
+    return generateResponseData("success", "Note updated successfully", {
+        note: note,
+    });
+};
+
+module.exports = { fetchAll, addNote, updateNote };

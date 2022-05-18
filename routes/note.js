@@ -23,7 +23,7 @@ router.get("/fetchallnotes", fetchuser, async (req, res) => {
             return res.status(400).json(serviceResponse);
 
         default:
-            res.status(400).json({ error: "unknown error" });
+            return res.status(400).json({ error: "unknown error" });
     }
 });
 
@@ -56,8 +56,47 @@ router.post("/addnote", fetchuser, noteValidator, async (req, res) => {
             return res.status(400).json(serviceResponse);
 
         default:
-            res.status(400).json({ error: "unknown error" });
+            return res.status(400).json({ error: "unknown error" });
     }
 });
+
+// update a note, login required
+router.put(
+    "/updatenote/:noteId",
+    fetchuser,
+    noteValidator,
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // if there are any errors then send bad status.
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const userId = req.user.id;
+        const noteId = req.params.noteId;
+        const updatedNoteData = {
+            title: req.body.title,
+            description: req.body.description,
+            tag: req.body.tag,
+        };
+        const serviceResponse = await noteService.updateNote(
+            userId,
+            noteId,
+            updatedNoteData
+        );
+
+        switch (serviceResponse.type) {
+            case "error":
+                return res.status(400).json(serviceResponse);
+            case "success":
+                return res.status(200).json(serviceResponse);
+            case "fault":
+                return res.status(400).json(serviceResponse);
+
+            default:
+                return res.status(400).json({ error: "unknown error" });
+        }
+    }
+);
 
 module.exports = router;

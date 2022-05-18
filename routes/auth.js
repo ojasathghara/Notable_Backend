@@ -40,7 +40,7 @@ router.post("/createuser", userValidator, async (req, res) => {
             return res.status(400).json(serviceResponse);
 
         default:
-            res.status(400).json({ error: "unknown error" });
+            return res.status(400).json({ error: "unknown error" });
     }
 });
 
@@ -66,7 +66,7 @@ router.post("/login", loginValidator, async (req, res) => {
             return res.status(400).json(serviceResponse);
 
         default:
-            res.status(400).json({ error: "unknown error" });
+            return res.status(400).json({ error: "unknown error" });
     }
 });
 
@@ -85,7 +85,7 @@ router.post("/getuser", fetchuser, async (req, res) => {
             return res.status(400).json(serviceResponse);
 
         default:
-            res.status(400).json({ error: "unknown error" });
+            return res.status(400).json({ error: "unknown error" });
     }
 });
 
