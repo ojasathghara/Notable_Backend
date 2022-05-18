@@ -68,4 +68,29 @@ router.put(
     }
 );
 
+// delete a note, login required
+router.delete(
+    "/delete/:noteId",
+    fetchuser,
+
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            // if there are any errors then send bad status.
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const userId = req.user.id;
+        const noteId = req.params.noteId;
+
+        res = await noteService.deleteNote(
+            userId,
+            noteId,
+
+            res
+        );
+        res.send();
+    }
+);
+
 module.exports = router;
