@@ -15,7 +15,7 @@ const fetchuser = (req, res, next) => {
             "error",
             "Please login using correct credentials"
         );
-        res.status(401).send(responseData);
+        return res.status(401).send(responseData);
     }
 
     try {
@@ -26,7 +26,7 @@ const fetchuser = (req, res, next) => {
         next(); // now further process using the function in which this middleware is called
     } catch (error) {
         const responseData = generateResponseData("fault", "server fault");
-        res.status(401).send(responseData);
+        return res.status(401).send(responseData);
     }
 };
 
