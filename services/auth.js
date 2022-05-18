@@ -45,9 +45,7 @@ const createUser = async (newUserData, res) => {
         );
     } catch (error) {
         console.log(error.message);
-        return setResponse(res, 400, "fault", "Internal server error", {
-            error: error.message,
-        });
+        return setResponse(res, 500, "fault", "Internal server error");
     }
 };
 
@@ -66,13 +64,7 @@ const login = async (userData, res) => {
             );
         }
 
-        // compare the given password and stored password.
-        console.log("user id: " + user._id);
-        console.log("password: " + password);
-        console.log("hash: " + user.password);
-
         const passwordCompare = await bcrypt.compare(password, user.password);
-        console.log("compare result: " + passwordCompare);
 
         if (!passwordCompare) {
             return setResponse(
@@ -95,9 +87,7 @@ const login = async (userData, res) => {
         return setResponse(res, 200, "success", "User authenticated", extra);
     } catch (error) {
         console.log(error.message);
-        return setResponse(res, 400, "fault", "Internal server error", {
-            error: error.message,
-        });
+        return setResponse(res, 500, "fault", "Internal server error");
     }
 };
 
@@ -112,9 +102,7 @@ const getUser = async (userId, res) => {
         });
     } catch (error) {
         console.log(error.message);
-        return setResponse(res, 400, "fault", "Internal server error", {
-            error: error.message,
-        });
+        return setResponse(res, 500, "fault", "Internal server error");
     }
 };
 

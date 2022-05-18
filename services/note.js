@@ -1,7 +1,6 @@
 // import models
 const Note = require("../models/Note");
 const User = require("../models/User");
-const ObjectId = require("mongoose").Types.ObjectId;
 
 // import utils
 const { setResponse } = require("../utilities/respond");
@@ -20,9 +19,7 @@ const fetchAll = async (userId, res) => {
         );
     } catch (error) {
         console.log(error.message);
-        return setResponse(res, 400, "fault", "Internal server error", {
-            error: error.message,
-        });
+        return setResponse(res, 500, "fault", "Internal server error");
     }
 };
 
@@ -50,9 +47,8 @@ const addNote = async (userId, newNoteData, res) => {
             note: note,
         });
     } catch (error) {
-        return setResponse(res, 400, "fault", "Internal server error", {
-            error: error.message,
-        });
+        console.log(error.message);
+        return setResponse(res, 500, "fault", "Internal server error");
     }
 };
 
@@ -68,7 +64,6 @@ const updateNote = async (userId, noteId, updatedNoteData, res) => {
             );
         }
         const oldNote = await Note.findById(noteId);
-        console.log("old note: " + oldNote);
         if (!oldNote) {
             return setResponse(
                 res,
@@ -99,9 +94,8 @@ const updateNote = async (userId, noteId, updatedNoteData, res) => {
             note: note,
         });
     } catch (error) {
-        return setResponse(res, 400, "fault", "Internal server error", {
-            error: error.message,
-        });
+        console.log(error.message);
+        return setResponse(res, 500, "fault", "Internal server error");
     }
 };
 
@@ -141,9 +135,8 @@ const deleteNote = async (userId, noteId, res) => {
             id: noteId,
         });
     } catch (error) {
-        return setResponse(res, 400, "fault", "Internal server error", {
-            error: error.message,
-        });
+        console.log(error.message);
+        return setResponse(res, 500, "fault", "Internal server error");
     }
 };
 
