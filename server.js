@@ -12,8 +12,10 @@ const port = process.env.PORT || 16500;
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/note", require("./routes/note"));
 
+const { setResponse } = require("./utilities/respond");
 app.get("/", (req, res) => {
-    res.send("Hello World!");
+    res = setResponse(res, 200, { type: "success", message: "url fetched" });
+    res.send();
 });
 
 // server

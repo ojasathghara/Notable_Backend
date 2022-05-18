@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 // importing utilities
-const { generateResponseData } = require("../utilities/responseData");
+const { generateResponseData } = require("../utilities/respond");
 
 const JWT_SECRET = "DevelopedByOA"; // to sign the jwt token from my end.
 

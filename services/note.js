@@ -4,7 +4,7 @@ const User = require("../models/User");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 // import utils
-const { generateResponseData } = require("../utilities/responseData");
+const { generateResponseData } = require("../utilities/respond");
 
 const fetchAll = async (userId) => {
     try {

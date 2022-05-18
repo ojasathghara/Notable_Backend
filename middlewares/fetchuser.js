@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 // importing utilities
-const { generateResponseData } = require("../utilities/responseData");
+const { generateResponseData } = require("../utilities/respond");
 
 const JWT_SECRET = "DevelopedByOA"; // to verify the jwt token from my end.
 
