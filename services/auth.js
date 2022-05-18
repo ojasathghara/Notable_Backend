@@ -16,30 +16,29 @@ const createUser = async (newUserData) => {
                 "Email already registered",
                 {}
             );
-        } else {
-            // first change the password to a secure password.
-            const salt = await bcrypt.genSalt(10); // generate a 10 character salt
-            const secPassword = await bcrypt.hash(newUserData.password, salt);
-            newUserData.password = secPassword;
-
-            user = await User.create(newUserData); // user created by mongo db will have all db feilds such as id and all
-            // this data is decoded by jwt using jwt.verify
-            const data = {
-                user: {
-                    id: user._id,
-                },
-            };
-            const authToken = jwt.sign(data, JWT_SECRET);
-            const extra = {
-                token: authToken,
-            };
-
-            return generateResponseData(
-                "success",
-                "User created successfully",
-                extra
-            );
         }
+        // first change the password to a secure password.
+        const salt = await bcrypt.genSalt(10); // generate a 10 character salt
+        const secPassword = await bcrypt.hash(newUserData.password, salt);
+        newUserData.password = secPassword;
+
+        user = await User.create(newUserData); // user created by mongo db will have all db feilds such as id and all
+        // this data is decoded by jwt using jwt.verify
+        const data = {
+            user: {
+                id: user._id,
+            },
+        };
+        const authToken = jwt.sign(data, JWT_SECRET);
+        const extra = {
+            token: authToken,
+        };
+
+        return generateResponseData(
+            "success",
+            "User created successfully",
+            extra
+        );
     } catch (error) {
         console.log(error.message);
         return generateResponseData("fault", "database fault", {
@@ -52,7 +51,7 @@ const login = async (userData) => {
     try {
         const { email, password } = userData; // destructuring the json body
         // retrieves the user from the database
-        let user = await User.findOne({ email: email }).lean(true);
+        let user = await User.findOne({ email: email });
         if (!user) {
             return generateResponseData(
                 "error",
@@ -74,19 +73,18 @@ const login = async (userData) => {
                 "error",
                 "Please login using correct credentials"
             );
-        } else {
-            // this data is decoded by jwt using jwt.verify
-            const data = {
-                user: {
-                    id: user._id,
-                },
-            };
-            const authToken = jwt.sign(data, JWT_SECRET);
-            const extra = {
-                token: authToken,
-            };
-            return generateResponseData("success", "User authenticated", extra);
         }
+        // this data is decoded by jwt using jwt.verify
+        const data = {
+            user: {
+                id: user._id,
+            },
+        };
+        const authToken = jwt.sign(data, JWT_SECRET);
+        const extra = {
+            token: authToken,
+        };
+        return generateResponseData("success", "User authenticated", extra);
     } catch (error) {
         console.log(error.message);
         return generateResponseData("fault", "database fault", {
@@ -100,11 +98,10 @@ const getUser = async (userId) => {
         const user = await User.findById(userId).select("-password"); // select all fields instead of the password
         if (!user) {
             return generateResponseData("error", "User does not exist");
-        } else {
-            return generateResponseData("success", "User exists", {
-                user: user,
-            });
         }
+        return generateResponseData("success", "User exists", {
+            user: user,
+        });
     } catch (error) {
         console.log(error.message);
         return generateResponseData("fault", "database fault", {

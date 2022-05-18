@@ -26,22 +26,21 @@ router.post("/createuser", userValidator, async (req, res) => {
     if (!errors.isEmpty()) {
         // if there are any errors then send bad status.
         return res.status(400).json({ errors: errors.array() });
-    } else {
-        // create a new user
-        let serviceResponse = await authService.createUser(req.body);
-        console.log(serviceResponse);
+    }
+    // create a new user
+    const serviceResponse = await authService.createUser(req.body);
+    console.log(serviceResponse);
 
-        switch (serviceResponse.type) {
-            case "error":
-                return res.status(400).json(serviceResponse);
-            case "success":
-                return res.status(200).json(serviceResponse);
-            case "fault":
-                return res.status(400).json(serviceResponse);
+    switch (serviceResponse.type) {
+        case "error":
+            return res.status(400).json(serviceResponse);
+        case "success":
+            return res.status(200).json(serviceResponse);
+        case "fault":
+            return res.status(400).json(serviceResponse);
 
-            default:
-                res.status(400).json({ error: "unknown error" });
-        }
+        default:
+            res.status(400).json({ error: "unknown error" });
     }
 });
 
@@ -55,20 +54,19 @@ router.post("/login", loginValidator, async (req, res) => {
     if (!errors.isEmpty()) {
         // if there are any errors then send bad status.
         return res.status(400).json({ errors: errors.array() });
-    } else {
-        let serviceResponse = await authService.login(req.body);
+    }
+    const serviceResponse = await authService.login(req.body);
 
-        switch (serviceResponse.type) {
-            case "error":
-                return res.status(400).json(serviceResponse);
-            case "success":
-                return res.status(200).json(serviceResponse);
-            case "fault":
-                return res.status(400).json(serviceResponse);
+    switch (serviceResponse.type) {
+        case "error":
+            return res.status(400).json(serviceResponse);
+        case "success":
+            return res.status(200).json(serviceResponse);
+        case "fault":
+            return res.status(400).json(serviceResponse);
 
-            default:
-                res.status(400).json({ error: "unknown error" });
-        }
+        default:
+            res.status(400).json({ error: "unknown error" });
     }
 });
 
@@ -76,7 +74,7 @@ router.post("/login", loginValidator, async (req, res) => {
 
 router.post("/getuser", fetchuser, async (req, res) => {
     const userId = req.user.id; // appended using middleware fetuser
-    let serviceResponse = await authService.getUser(userId);
+    const serviceResponse = await authService.getUser(userId);
 
     switch (serviceResponse.type) {
         case "error":
