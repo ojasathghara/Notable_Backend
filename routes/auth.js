@@ -28,20 +28,8 @@ router.post("/createuser", userValidator, async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
     // create a new user
-    const serviceResponse = await authService.createUser(req.body);
-    console.log(serviceResponse);
-
-    switch (serviceResponse.type) {
-        case "error":
-            return res.status(400).json(serviceResponse);
-        case "success":
-            return res.status(200).json(serviceResponse);
-        case "fault":
-            return res.status(400).json(serviceResponse);
-
-        default:
-            return res.status(400).json({ error: "unknown error" });
-    }
+    res = await authService.createUser(req.body, res);
+    res.send();
 });
 
 // authenticate a user using POST, doesn't require auth or login
@@ -55,38 +43,15 @@ router.post("/login", loginValidator, async (req, res) => {
         // if there are any errors then send bad status.
         return res.status(400).json({ errors: errors.array() });
     }
-    const serviceResponse = await authService.login(req.body);
-
-    switch (serviceResponse.type) {
-        case "error":
-            return res.status(400).json(serviceResponse);
-        case "success":
-            return res.status(200).json(serviceResponse);
-        case "fault":
-            return res.status(400).json(serviceResponse);
-
-        default:
-            return res.status(400).json({ error: "unknown error" });
-    }
+    res = await authService.login(req.body, res);
+    res.send();
 });
 
 // get the logged in user, login required
-
 router.post("/getuser", fetchuser, async (req, res) => {
     const userId = req.user.id; // appended using middleware fetuser
-    const serviceResponse = await authService.getUser(userId);
-
-    switch (serviceResponse.type) {
-        case "error":
-            return res.status(400).json(serviceResponse);
-        case "success":
-            return res.status(200).json(serviceResponse);
-        case "fault":
-            return res.status(400).json(serviceResponse);
-
-        default:
-            return res.status(400).json({ error: "unknown error" });
-    }
+    res = await authService.getUser(userId, res);
+    res.send();
 });
 
 module.exports = router;

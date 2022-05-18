@@ -12,19 +12,9 @@ const router = express.Router();
 // get all the notes
 router.get("/fetchallnotes", fetchuser, async (req, res) => {
     const userId = req.user.id; // appended using middleware fetuser
-    const serviceResponse = await noteService.fetchAll(userId);
+    res = await noteService.fetchAll(userId, res);
 
-    switch (serviceResponse.type) {
-        case "error":
-            return res.status(400).json(serviceResponse);
-        case "success":
-            return res.status(200).json(serviceResponse);
-        case "fault":
-            return res.status(400).json(serviceResponse);
-
-        default:
-            return res.status(400).json({ error: "unknown error" });
-    }
+    res.send();
 });
 
 // add a new note
@@ -45,19 +35,8 @@ router.post("/addnote", fetchuser, noteValidator, async (req, res) => {
         description: req.body.description,
         tag: req.body.tag,
     };
-    const serviceResponse = await noteService.addNote(userId, newNoteData);
-
-    switch (serviceResponse.type) {
-        case "error":
-            return res.status(400).json(serviceResponse);
-        case "success":
-            return res.status(200).json(serviceResponse);
-        case "fault":
-            return res.status(400).json(serviceResponse);
-
-        default:
-            return res.status(400).json({ error: "unknown error" });
-    }
+    res = await noteService.addNote(userId, newNoteData, res);
+    res.send();
 });
 
 // update a note, login required
@@ -79,23 +58,13 @@ router.put(
             description: req.body.description,
             tag: req.body.tag,
         };
-        const serviceResponse = await noteService.updateNote(
+        res = await noteService.updateNote(
             userId,
             noteId,
-            updatedNoteData
+            updatedNoteData,
+            res
         );
-
-        switch (serviceResponse.type) {
-            case "error":
-                return res.status(400).json(serviceResponse);
-            case "success":
-                return res.status(200).json(serviceResponse);
-            case "fault":
-                return res.status(400).json(serviceResponse);
-
-            default:
-                return res.status(400).json({ error: "unknown error" });
-        }
+        res.send();
     }
 );
 

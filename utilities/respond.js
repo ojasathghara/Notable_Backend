@@ -1,10 +1,10 @@
-const generateResponseData = (type, message, extras = {}) => {
-    return { type: type, message: message, data: extras };
-};
-
-const setResponse = (res, status, serviceResponse) => {
+const setResponse = (res, status, type, message, data = {}) => {
     res.status(status);
-    res.json(serviceResponse);
+    res.json({
+        type: type,
+        message: message,
+        data: data,
+    });
 
     return res;
 };

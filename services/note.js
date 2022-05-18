@@ -4,12 +4,14 @@ const User = require("../models/User");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 // import utils
-const { generateResponseData } = require("../utilities/respond");
+const { setResponse } = require("../utilities/respond");
 
-const fetchAll = async (userId) => {
+const fetchAll = async (userId, res) => {
     try {
         const notes = await Note.find({ user: userId });
-        return generateResponseData(
+        return setResponse(
+            res,
+            200,
             "success",
             `fetched ${notes.length} notes`,
             {
@@ -18,19 +20,21 @@ const fetchAll = async (userId) => {
         );
     } catch (error) {
         console.log(error.message);
-        return generateResponseData("fault", "Internal server error", {
+        return setResponse(res, 400, "fault", "Internal server error", {
             error: error.message,
         });
     }
 };
 
-const addNote = async (userId, newNoteData) => {
+const addNote = async (userId, newNoteData, res) => {
     try {
         const user = await User.findById(userId).select("-password"); // select all fields instead of the password
         if (!user) {
-            return generateResponseData(
+            return setResponse(
+                res,
+                400,
                 "error",
-                "Cannot create the note, user does not exist"
+                "Cannot create the note, user not found"
             );
         }
 
@@ -42,36 +46,42 @@ const addNote = async (userId, newNoteData) => {
             tag: newNoteData.tag,
         });
 
-        return generateResponseData("success", "Note created", {
+        return setResponse(res, 200, "success", "Note created", {
             note: note,
         });
     } catch (error) {
         console.log(error.message);
-        return generateResponseData("fault", "Internal server error", {
+        return setResponse(res, 400, "fault", "Internal server error", {
             error: error.message,
         });
     }
 };
 
-const updateNote = async (userId, noteId, updatedNoteData) => {
+const updateNote = async (userId, noteId, updatedNoteData, res) => {
     const user = await User.findById(userId).select("-password"); // select all fields instead of the password
     if (!user) {
-        return generateResponseData(
+        return setResponse(
+            res,
+            404,
             "error",
-            "Cannot update the note, user does not exist"
+            "Cannot update the note, user not found"
         );
     }
     const oldNote = await Note.findById(noteId);
     console.log("old note: " + oldNote);
     if (!oldNote) {
-        return generateResponseData(
+        return setResponse(
+            res,
+            404,
             "error",
-            "Cannot update the note, note does not exist"
+            "Cannot update the note, note not found"
         );
     }
 
     if (oldNote.user.toString() !== userId) {
-        return generateResponseData(
+        return setResponse(
+            res,
+            401,
             "error",
             "You cannot update the note. This note doesn't belong to you."
         );
@@ -85,7 +95,7 @@ const updateNote = async (userId, noteId, updatedNoteData) => {
 
     const note = await oldNote.save();
 
-    return generateResponseData("success", "Note updated successfully", {
+    return setResponse(res, 200, "success", "Note updated successfully", {
         note: note,
     });
 };

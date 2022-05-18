@@ -3,15 +3,17 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 // importing utilities
-const { generateResponseData } = require("../utilities/respond");
+const { setResponse } = require("../utilities/respond");
 
 const JWT_SECRET = "DevelopedByOA"; // to sign the jwt token from my end.
 
-const createUser = async (newUserData) => {
+const createUser = async (newUserData, res) => {
     try {
         let user = await User.findOne({ email: newUserData.email }); // finding a user in the Users table
         if (user) {
-            return generateResponseData(
+            return setResponse(
+                res,
+                400,
                 "error",
                 "Email already registered",
                 {}
@@ -34,26 +36,30 @@ const createUser = async (newUserData) => {
             token: authToken,
         };
 
-        return generateResponseData(
+        return setResponse(
+            res,
+            200,
             "success",
             "User created successfully",
             extra
         );
     } catch (error) {
         console.log(error.message);
-        return generateResponseData("fault", "Internal server error", {
+        return setResponse(res, 400, "fault", "Internal server error", {
             error: error.message,
         });
     }
 };
 
-const login = async (userData) => {
+const login = async (userData, res) => {
     try {
         const { email, password } = userData; // destructuring the json body
         // retrieves the user from the database
         let user = await User.findOne({ email: email });
         if (!user) {
-            return generateResponseData(
+            return setResponse(
+                res,
+                400,
                 "error",
                 "Please login using correct credentials",
                 {}
@@ -69,7 +75,9 @@ const login = async (userData) => {
         console.log("compare result: " + passwordCompare);
 
         if (!passwordCompare) {
-            return generateResponseData(
+            return setResponse(
+                res,
+                400,
                 "error",
                 "Please login using correct credentials"
             );
@@ -84,27 +92,27 @@ const login = async (userData) => {
         const extra = {
             token: authToken,
         };
-        return generateResponseData("success", "User authenticated", extra);
+        return setResponse(res, 200, "success", "User authenticated", extra);
     } catch (error) {
         console.log(error.message);
-        return generateResponseData("fault", "Internal server error", {
+        return setResponse(res, 400, "fault", "Internal server error", {
             error: error.message,
         });
     }
 };
 
-const getUser = async (userId) => {
+const getUser = async (userId, res) => {
     try {
         const user = await User.findById(userId).select("-password"); // select all fields instead of the password
         if (!user) {
-            return generateResponseData("error", "User does not exist");
+            return setResponse(res, 404, "error", "User not found");
         }
-        return generateResponseData("success", "User exists", {
+        return setResponse(res, 200, "success", "User exists", {
             user: user,
         });
     } catch (error) {
         console.log(error.message);
-        return generateResponseData("fault", "Internal server error", {
+        return setResponse(res, 400, "fault", "Internal server error", {
             error: error.message,
         });
     }
