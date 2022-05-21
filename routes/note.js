@@ -12,9 +12,19 @@ const router = express.Router();
 // get all the notes
 router.get("/fetchallnotes", fetchuser, async (req, res) => {
     const userId = req.user.id; // appended using middleware fetuser
-    res = await noteService.fetchAll(userId, res);
 
-    res.send();
+    try {
+        const notes = await noteService.fetchAll(userId);
+        const responseData = {
+            data: {
+                notes: notes,
+            },
+        };
+        return res.status(200).json(responseData);
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).json({ error: "Internal server error" });
+    }
 });
 
 // add a new note
@@ -35,8 +45,19 @@ router.post("/addnote", fetchuser, noteValidator, async (req, res) => {
         description: req.body.description,
         tag: req.body.tag,
     };
-    res = await noteService.addNote(userId, newNoteData, res);
-    res.send();
+
+    try {
+        const note = await noteService.addNote(userId, newNoteData);
+        const responseData = {
+            data: {
+                note: note,
+            },
+        };
+        res.status(200).json(responseData);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
 });
 
 // update a note, login required
@@ -58,13 +79,19 @@ router.put(
             description: req.body.description,
             tag: req.body.tag,
         };
-        res = await noteService.updateNote(
-            userId,
-            noteId,
-            updatedNoteData,
-            res
-        );
-        res.send();
+        try {
+            const note = await noteService.updateNote(
+                userId,
+                noteId,
+                updatedNoteData
+            );
+            const responseData = { data: { note: note } };
+
+            res.status(200).json(responseData);
+        } catch (error) {
+            console.log(error.message);
+            res.status(500).json({ error: "Internal server error" });
+        }
     }
 );
 
@@ -83,13 +110,14 @@ router.delete(
         const userId = req.user.id;
         const noteId = req.params.noteId;
 
-        res = await noteService.deleteNote(
-            userId,
-            noteId,
-
-            res
-        );
-        res.send();
+        try {
+            const id = await noteService.deleteNote(userId, noteId);
+            const responseData = { data: { id: id } };
+            res.status(200).json(responseData);
+        } catch (error) {
+            console.log(error.message);
+            res.status(500).json({ error: "Internal server error" });
+        }
     }
 );
 
