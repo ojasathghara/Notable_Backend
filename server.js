@@ -1,13 +1,14 @@
 const express = require("express");
 const connectToMongo = require("./database/db");
+const cors = require("cors");
 
 // initial setup
 connectToMongo();
 const app = express();
 app.use(express.json());
+app.use(cors());
 
-const port = process.env.PORT || 16500;
-
+const port = process.env.PORT || 56000;
 // routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/note", require("./routes/note"));
