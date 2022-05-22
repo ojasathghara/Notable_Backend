@@ -8,15 +8,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const port = process.env.PORT || 56000;
+const port = process.env.PORT || 54000;
 // routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/note", require("./routes/note"));
 
-const { setResponse } = require("./utilities/respond");
 app.get("/", (req, res) => {
-    res = setResponse(res, 200, { type: "success", message: "url fetched" });
-    res.send();
+    res.send("You hav reached notable api url");
 });
 
 // server
