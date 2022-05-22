@@ -34,6 +34,7 @@ router.post("/createtag", fetchuser, tagValidator, async (req, res) => {
         color: req.body.color,
     };
 
+    const userId = req.user.id;
     try {
         const tag = await tagService.addTag(userId, newTagData);
         const responseData = { data: { tag: tag } };
