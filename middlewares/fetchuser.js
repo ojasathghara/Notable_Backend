@@ -7,7 +7,7 @@ const JWT_SECRET = "DevelopedByOA"; // to verify the jwt token from my end.
 const fetchuser = (req, res, next) => {
     // get the user from jwt token that sent when user logged in
     // add id to the request obj
-    const token = req.header("auth-token"); // we will send the token key value pair with key as 'auth-token'
+    const token = req.header("auth_token"); // we will send the token key value pair with key as 'auth_token'
     console.log("token :" + token);
     if (!token) {
         return res.status(401).send({ error: "Unauthorized access" });

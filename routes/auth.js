@@ -28,8 +28,18 @@ router.post("/createuser", userValidator, async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
     // create a new user
-    res = await authService.createUser(req.body, res);
-    res.send();
+    try {
+        const authToken = await authService.createUser(req.body, res);
+        const responseData = {
+            data: {
+                auth_token: authToken,
+            },
+        };
+        return res.status(200).json(responseData);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
 });
 
 // authenticate a user using POST, doesn't require auth or login
@@ -43,15 +53,27 @@ router.post("/login", loginValidator, async (req, res) => {
         // if there are any errors then send bad status.
         return res.status(400).json({ errors: errors.array() });
     }
-    res = await authService.login(req.body, res);
-    res.send();
+    try {
+        const authToken = await authService.login(req.body);
+        const responseData = { data: { auth_token: authToken } };
+        res.status(200).json(responseData);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
 });
 
 // get the logged in user, login required
 router.post("/getuser", fetchuser, async (req, res) => {
     const userId = req.user.id; // appended using middleware fetuser
-    res = await authService.getUser(userId, res);
-    res.send();
+    try {
+        const user = await authService.getUser(userId);
+        const responseData = { data: { user: user } };
+        res.status(200).json(responseData);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
 });
 
 module.exports = router;
