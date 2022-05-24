@@ -7,7 +7,17 @@ const JWT_SECRET = "DevelopedByOA"; // to sign the jwt token from my end.
 const createUser = async (newUserData) => {
     let user = await User.findOne({ email: newUserData.email }); // finding a user in the Users table
     if (user) {
-        throw { type: 402, message: "User already exists" };
+        throw {
+            errors: [
+                {
+                    value: email,
+                    status: 402,
+                    msg: "Email already registered",
+                    param: "email",
+                    location: "body",
+                },
+            ],
+        };
     }
     // first change the password to a secure password.
     const salt = await bcrypt.genSalt(10); // generate a 10 character salt
@@ -30,13 +40,33 @@ const login = async (userData) => {
     // retrieves the user from the database
     let user = await User.findOne({ email: email });
     if (!user) {
-        throw { type: 404, message: "User not found" };
+        throw {
+            errors: [
+                {
+                    value: email,
+                    status: 404,
+                    msg: "User not found",
+                    param: "email",
+                    location: "body",
+                },
+            ],
+        };
     }
 
     const passwordCompare = await bcrypt.compare(password, user.password);
 
     if (!passwordCompare) {
-        throw { type: 401, message: "Please login using correct credentials" };
+        throw {
+            errors: [
+                {
+                    value: password,
+                    status: 401,
+                    msg: "Please login using correct credentials",
+                    param: "password",
+                    location: "body",
+                },
+            ],
+        };
     }
     // this data is decoded by jwt using jwt.verify
     const data = {
@@ -51,7 +81,17 @@ const login = async (userData) => {
 const getUser = async (userId) => {
     const user = await User.findById(userId).select("-password"); // select all fields instead of the password
     if (!user) {
-        throw { type: 404, message: "User not found" };
+        throw {
+            errors: [
+                {
+                    value: userId,
+                    status: 404,
+                    msg: "User not found",
+                    param: "userId",
+                    location: "body",
+                },
+            ],
+        };
     }
     return user;
 };

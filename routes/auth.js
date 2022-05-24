@@ -31,14 +31,16 @@ router.post("/createuser", userValidator, async (req, res) => {
     try {
         const authToken = await authService.createUser(req.body, res);
         const responseData = {
+            staus: 200,
+            message: "User created successfully",
             data: {
                 auth_token: authToken,
             },
         };
         return res.status(200).json(responseData);
     } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ error: "Internal server error" });
+        console.log(error.errors[0].msg);
+        res.status(error.errors[0].status).json(error);
     }
 });
 
@@ -58,8 +60,8 @@ router.post("/login", loginValidator, async (req, res) => {
         const responseData = { data: { auth_token: authToken } };
         res.status(200).json(responseData);
     } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ error: "Internal server error" });
+        console.log(error.errors[0].msg);
+        res.status(error.errors[0].status).json(error);
     }
 });
 
@@ -71,8 +73,8 @@ router.post("/getuser", fetchuser, async (req, res) => {
         const responseData = { data: { user: user } };
         res.status(200).json(responseData);
     } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ error: "Internal server error" });
+        console.log(error.errors[0].msg);
+        res.status(error.errors[0].status).json(error);
     }
 });
 

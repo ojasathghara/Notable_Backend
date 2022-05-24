@@ -22,8 +22,8 @@ router.get("/fetchallnotes", fetchuser, async (req, res) => {
         };
         return res.status(200).json(responseData);
     } catch (error) {
-        console.log(error.message);
-        return res.status(500).json({ error: "Internal server error" });
+        console.log(error.errors[0].msg);
+        res.status(error.errors[0].status).json(error);
     }
 });
 
@@ -55,8 +55,8 @@ router.post("/addnote", fetchuser, noteValidator, async (req, res) => {
         };
         res.status(200).json(responseData);
     } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ error: "Internal server error" });
+        console.log(error.errors[0].msg);
+        res.status(error.errors[0].status).json(error);
     }
 });
 
@@ -89,8 +89,8 @@ router.put(
 
             res.status(200).json(responseData);
         } catch (error) {
-            console.log(error.message);
-            res.status(500).json({ error: "Internal server error" });
+            console.log(error.errors[0].msg);
+            res.status(error.errors[0].status).json(error);
         }
     }
 );
@@ -109,8 +109,8 @@ router.delete(
             const responseData = { data: { id: id } };
             res.status(200).json(responseData);
         } catch (error) {
-            console.log(error.message);
-            res.status(500).json({ error: "Internal server error" });
+            console.log(error.errors[0].msg);
+            res.status(error.errors[0].status).json(error);
         }
     }
 );

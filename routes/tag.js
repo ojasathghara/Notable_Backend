@@ -13,8 +13,8 @@ router.get("/fetchalltags", fetchuser, async (req, res) => {
         const responseData = { data: { tags: tags } };
         res.status(200).json(responseData);
     } catch (error) {
-        console.log(error.message);
-        return res.status(500).json({ error: "Internal server error" });
+        console.log(error.errors[0].msg);
+        res.status(error.errors[0].status).json(error);
     }
 });
 
@@ -40,8 +40,8 @@ router.post("/createtag", fetchuser, tagValidator, async (req, res) => {
         const responseData = { data: { tag: tag } };
         res.status(200).json(responseData);
     } catch (error) {
-        console.log(error.message);
-        res.status(500).json({ error: "Internal server error" });
+        console.log(error.errors[0].msg);
+        res.status(error.errors[0].status).json(error);
     }
 });
 
@@ -53,9 +53,9 @@ router.delete("/deletetag/:id", fetchuser, async (req, res) => {
         const id = await tagService.deleteTag(userId, tagId);
         const responseData = { data: { id: id } };
         res.status(200).json(responseData);
-    } catch (errors) {
-        console.log(errors.message);
-        res.status(500).json("Internal server error");
+    } catch (error) {
+        console.log(error.errors[0].msg);
+        res.status(error.errors[0].status).json(error);
     }
 });
 
