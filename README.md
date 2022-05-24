@@ -73,12 +73,12 @@ To get a local copy up and running follow these simple example steps.
 2. Install NPM packages
 
     ```sh
+    cd Notable_Backend
     npm install
     ```
 
 3. Run on localhost
     ```sh
-    cd Notable_Backend
     node server.js
     ```
 
