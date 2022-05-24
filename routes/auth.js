@@ -31,7 +31,7 @@ router.post("/createuser", userValidator, async (req, res) => {
     try {
         const authToken = await authService.createUser(req.body, res);
         const responseData = {
-            staus: 200,
+            status: 200,
             msg: "User created successfully",
             data: {
                 auth_token: authToken,
@@ -39,7 +39,7 @@ router.post("/createuser", userValidator, async (req, res) => {
         };
         return res.status(200).json(responseData);
     } catch (error) {
-        console.log(error.errors[0].msg);
+        console.log(error);
         res.status(error.errors[0].status).json(error);
     }
 });
