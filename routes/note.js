@@ -16,6 +16,8 @@ router.get("/fetchallnotes", fetchuser, async (req, res) => {
     try {
         const notes = await noteService.fetchAll(userId);
         const responseData = {
+            status: 200,
+            msg: "Fetched all notes successfully",
             data: {
                 notes: notes,
             },
@@ -49,6 +51,8 @@ router.post("/addnote", fetchuser, noteValidator, async (req, res) => {
     try {
         const note = await noteService.addNote(userId, newNoteData);
         const responseData = {
+            status: 200,
+            msg: "Note added successfully",
             data: {
                 note: note,
             },
@@ -85,7 +89,11 @@ router.put(
                 noteId,
                 updatedNoteData
             );
-            const responseData = { data: { note: note } };
+            const responseData = {
+                status: 200,
+                msg: "Note updated successufully",
+                data: { note: note },
+            };
 
             res.status(200).json(responseData);
         } catch (error) {
@@ -106,7 +114,11 @@ router.delete(
 
         try {
             const id = await noteService.deleteNote(userId, noteId);
-            const responseData = { data: { id: id } };
+            const responseData = {
+                status: 200,
+                msg: "Note deleted successfully",
+                data: { id: id },
+            };
             res.status(200).json(responseData);
         } catch (error) {
             console.log(error.errors[0].msg);

@@ -10,7 +10,11 @@ router.get("/fetchalltags", fetchuser, async (req, res) => {
 
     try {
         const tags = await tagService.fetchAll(userId);
-        const responseData = { data: { tags: tags } };
+        const responseData = {
+            status: 200,
+            msg: "Tags fetched successfully",
+            data: { tags: tags },
+        };
         res.status(200).json(responseData);
     } catch (error) {
         console.log(error.errors[0].msg);
@@ -37,7 +41,11 @@ router.post("/createtag", fetchuser, tagValidator, async (req, res) => {
     const userId = req.user.id;
     try {
         const tag = await tagService.addTag(userId, newTagData);
-        const responseData = { data: { tag: tag } };
+        const responseData = {
+            status: 200,
+            msg: "Tag created successfully",
+            data: { tag: tag },
+        };
         res.status(200).json(responseData);
     } catch (error) {
         console.log(error.errors[0].msg);
@@ -51,7 +59,11 @@ router.delete("/deletetag/:id", fetchuser, async (req, res) => {
 
     try {
         const id = await tagService.deleteTag(userId, tagId);
-        const responseData = { data: { id: id } };
+        const responseData = {
+            status: 200,
+            msg: "Tag deleted successfully",
+            data: { id: id },
+        };
         res.status(200).json(responseData);
     } catch (error) {
         console.log(error.errors[0].msg);

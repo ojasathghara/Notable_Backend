@@ -32,7 +32,7 @@ router.post("/createuser", userValidator, async (req, res) => {
         const authToken = await authService.createUser(req.body, res);
         const responseData = {
             staus: 200,
-            message: "User created successfully",
+            msg: "User created successfully",
             data: {
                 auth_token: authToken,
             },
@@ -57,7 +57,11 @@ router.post("/login", loginValidator, async (req, res) => {
     }
     try {
         const authToken = await authService.login(req.body);
-        const responseData = { data: { auth_token: authToken } };
+        const responseData = {
+            status: 200,
+            msg: "User logged in successfully",
+            data: { auth_token: authToken },
+        };
         res.status(200).json(responseData);
     } catch (error) {
         console.log(error.errors[0].msg);
@@ -70,7 +74,11 @@ router.post("/getuser", fetchuser, async (req, res) => {
     const userId = req.user.id; // appended using middleware fetuser
     try {
         const user = await authService.getUser(userId);
-        const responseData = { data: { user: user } };
+        const responseData = {
+            status: 200,
+            msg: "Userfetched successfully",
+            data: { user: user },
+        };
         res.status(200).json(responseData);
     } catch (error) {
         console.log(error.errors[0].msg);
